@@ -53,6 +53,7 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 		return nil, errors.Wrap(err, "failed to send the API")
 	}
 	fmt.Println(res.Status)
+	fmt.Println(res.Header)
 
 	return res.Body, nil
 }
