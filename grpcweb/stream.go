@@ -5,7 +5,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/ktr0731/grpc-web-go-client/grpcweb/transport"
+	"github.com/fabregas/grpc-web-go-client/grpcweb/transport"
 	"github.com/pkg/errors"
 )
 
