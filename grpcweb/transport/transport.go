@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"sync"
+	"fmt"
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
@@ -51,6 +52,7 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to send the API")
 	}
+	fmt.Println(res.Status)
 
 	return res.Body, nil
 }
