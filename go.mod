@@ -1,11 +1,11 @@
-module github.com/ktr0731/grpc-web-go-client
+module github.com/fabregas/grpc-web-go-client
 
 require (
 	github.com/golang/protobuf v1.2.0
 	github.com/gorilla/websocket v1.4.0
 	github.com/improbable-eng/grpc-web v0.9.1 // indirect
 	github.com/jhump/protoreflect v0.0.0-20180803214909-95c5cbbeaee7
-	github.com/ktr0731/grpc-test v0.1.0
+	github.com/fabregas/grpc-test v0.1.0
 	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2
 	github.com/pkg/errors v0.8.0
 	github.com/stretchr/testify v1.3.0
