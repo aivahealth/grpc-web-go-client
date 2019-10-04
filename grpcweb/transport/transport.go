@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"sync"
 	"fmt"
+	 "net/http/cookiejar"
+
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
@@ -64,9 +66,12 @@ func (t *httpTransport) Close() error {
 }
 
 func NewUnary(host string, opts *ConnectOptions) UnaryTransport {
+	cookieJar, _ := cookiejar.New(nil)
 	return &httpTransport{
 		host:   host,
-		client: http.DefaultClient,
+		client: &http.Client{
+    			Jar: cookieJar,
+		},
 		opts:   opts,
 	}
 }
