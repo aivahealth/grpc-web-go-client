@@ -15,6 +15,7 @@ import (
 type ClientConn struct {
 	host        string
 	dialOptions *dialOptions
+	tr transport.UnaryTransport
 }
 
 func DialContext(host string, opts ...DialOption) (*ClientConn, error) {
@@ -22,9 +23,11 @@ func DialContext(host string, opts ...DialOption) (*ClientConn, error) {
 	for _, o := range opts {
 		o(&opt)
 	}
+
 	return &ClientConn{
 		host:        host,
 		dialOptions: &opt,
+		tr: transport.NewUnary(host, nil),
 	}, nil
 }
 
@@ -37,11 +40,8 @@ func (c *ClientConn) Invoke(ctx context.Context, method string, args, reply inte
 		return errors.Wrap(err, "failed to build the request body")
 	}
 
-	tr := transport.NewUnary(c.host, nil)
-	defer tr.Close()
-
 	contentType := "application/grpc-web+" + codec.Name()
-	rawBody, err := tr.Send(ctx, method, contentType, r)
+	rawBody, err := c.tr.Send(ctx, method, contentType, r)
 	if err != nil {
 		return errors.Wrap(err, "failed to send the request")
 	}
