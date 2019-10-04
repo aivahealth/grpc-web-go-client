@@ -29,12 +29,6 @@ type httpTransport struct {
 }
 
 func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, body io.Reader) (io.ReadCloser, error) {
-	if t.sent {
-		return nil, errors.New("Send must be called only one time per one Request")
-	}
-	defer func() {
-		t.sent = true
-	}()
 
 	// TODO: HTTP support.
 	scheme := "https"
