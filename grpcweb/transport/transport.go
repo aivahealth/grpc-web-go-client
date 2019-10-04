@@ -52,10 +52,12 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to send the API")
 	}
-	fmt.Println(res.Status)
-	fmt.Println(res.Header)
+	
+	if res.StatusCode == 200 && res.Header.Get("grpc-status") == "0" {
+		return res.Body, nil	
+	}
 
-	return res.Body, nil
+	return nil, fmt.Errorf("invalid status: %s", res.Header.Get("grpc-status"))
 }
 
 func (t *httpTransport) Close() error {
