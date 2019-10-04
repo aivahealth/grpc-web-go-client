@@ -35,8 +35,8 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 		t.sent = true
 	}()
 
-	// TODO: HTTPS support.
-	scheme := "http"
+	// TODO: HTTP support.
+	scheme := "https"
 	u := url.URL{Scheme: scheme, Host: t.host, Path: endpoint}
 	url := u.String()
 	req, err := http.NewRequest(http.MethodPost, url, body)
