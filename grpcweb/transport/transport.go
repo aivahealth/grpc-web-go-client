@@ -57,7 +57,7 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 		return res.Body, nil	
 	}
 
-	return nil, fmt.Errorf("invalid status: httpStatus=%s, grpcStatus=%s", res.Status, grpcStatus)
+	return nil, fmt.Errorf("invalid status: httpStatus=%s, grpcStatus=%s, headers=%+v", res.Status, grpcStatus, res.Header)
 }
 
 func (t *httpTransport) Close() error {
