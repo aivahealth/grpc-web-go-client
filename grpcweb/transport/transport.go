@@ -57,6 +57,8 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 		return res.Body, nil	
 	}
 
+	b, _ := ioutil.ReadAll(res.Body)
+	fmt.Printf("body: %s\n", string(b))
 	return nil, fmt.Errorf("invalid status: httpStatus=%s, grpcStatus=%s, headers=%+v", res.Status, grpcStatus, res.Header)
 }
 
