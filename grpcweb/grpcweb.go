@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/binary"
 	"io"
+	"io/ioutil"
 
 	"github.com/fabregas/grpc-web-go-client/grpcweb/transport"
 	"github.com/pkg/errors"
@@ -143,14 +144,10 @@ func parseResponseBody(resBody io.Reader) ([]byte, error) {
 	}
 
 	// TODO: check message size
-
-	content := make([]byte, int(length))
-	if n, err := resBody.Read(content); err != nil {
-		if err == io.EOF && int(n) != int(length) {
-			err = io.ErrUnexpectedEOF
-		}
-		return nil, err
+	content, err := ioutil.ReadAll(resBody)
+	if len(content) != int(length) {
+		return nil, io.ErrUnexpectedEOF
 	}
 
-	return content, nil
+	return content, err
 }
