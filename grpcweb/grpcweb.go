@@ -134,6 +134,13 @@ func parseRequestBody(codec encoding.Codec, in interface{}) (io.Reader, error) {
 // copied from rpc_util#parser.recvMsg
 // TODO: compressed message
 func parseResponseBody(resBody io.Reader) ([]byte, error) {
+	content, err := ioutil.ReadAll(resBody)
+	if err != nil {
+		return nil, err	
+	}
+	
+	return content[5:], nil
+	/*
 	var h [5]byte
 	if _, err := resBody.Read(h[:]); err != nil {
 		return nil, err
@@ -152,4 +159,5 @@ func parseResponseBody(resBody io.Reader) ([]byte, error) {
 	}
 
 	return content, err
+	*/
 }
