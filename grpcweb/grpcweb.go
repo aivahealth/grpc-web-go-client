@@ -1,7 +1,7 @@
 package grpcweb
 
 import (
-	"fmt"
+	//"fmt"
 	"bytes"
 	"context"
 	"encoding/binary"
