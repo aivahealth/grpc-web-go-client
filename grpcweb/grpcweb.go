@@ -1,6 +1,7 @@
 package grpcweb
 
 import (
+	"fmt"
 	"bytes"
 	"context"
 	"encoding/binary"
@@ -146,6 +147,7 @@ func parseResponseBody(resBody io.Reader) ([]byte, error) {
 	// TODO: check message size
 	content, err := ioutil.ReadAll(resBody)
 	if len(content) != int(length) {
+		fmt.Printf("len(content)=%d, expected=%d\n", len(content), int(length))
 		return nil, io.ErrUnexpectedEOF
 	}
 
