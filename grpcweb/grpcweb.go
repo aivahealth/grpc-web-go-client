@@ -1,7 +1,7 @@
 package grpcweb
 
 import (
-	//"fmt"
+	"fmt"
 	"bytes"
 	"context"
 	"encoding/binary"
@@ -139,7 +139,17 @@ func parseResponseBody(resBody io.Reader) ([]byte, error) {
 		return nil, err	
 	}
 	
-	return content[5:], nil
+	length := binary.BigEndian.Uint32(content[1:5])
+	if length == 0 {
+		return nil, nil
+	}
+	
+	if len(content) < int(length) {
+		fmt.Printf("len(content)=%d, expected=%d\n", len(content), int(length))
+		return nil, io.ErrUnexpectedEOF
+	}
+	
+	return content[5:5+int(length)], nil
 	/*
 	var h [5]byte
 	if _, err := resBody.Read(h[:]); err != nil {
