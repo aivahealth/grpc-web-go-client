@@ -1,14 +1,15 @@
 package grpcweb
 
 import (
-	"fmt"
 	"bytes"
 	"context"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"io/ioutil"
 
-	"github.com/fabregas/grpc-web-go-client/grpcweb/transport"
+	"github.com/aivahealth/grpc-web-go-client/grpcweb/transport"
+
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/encoding"
@@ -26,10 +27,15 @@ func DialContext(host string, opts ...DialOption) (*ClientConn, error) {
 		o(&opt)
 	}
 
+	connectOpts := &transport.ConnectOptions{
+		Insecure: opt.insecure,
+		Headers: opt.headers,
+	}
+
 	return &ClientConn{
 		host:        host,
 		dialOptions: &opt,
-		tr: transport.NewUnary(host, nil),
+		tr: transport.NewUnary(host, connectOpts),
 	}, nil
 }
 

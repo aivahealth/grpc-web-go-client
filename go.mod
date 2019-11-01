@@ -1,4 +1,4 @@
-module github.com/fabregas/grpc-web-go-client
+module github.com/aivahealth/grpc-web-go-client
 
 require (
 	github.com/golang/protobuf v1.2.0
@@ -14,3 +14,5 @@ require (
 	golang.org/x/sys v0.0.0-20190222072716-a9d3bda3a223 // indirect
 	google.golang.org/grpc v1.16.0
 )
+
+go 1.13

@@ -1,3 +1,8 @@
 package transport
 
-type ConnectOptions struct{}
+import "net/http"
+
+type ConnectOptions struct{
+	Insecure bool
+	Headers http.Header
+}

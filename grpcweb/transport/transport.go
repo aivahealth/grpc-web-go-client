@@ -3,15 +3,15 @@ package transport
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/http/cookiejar"
 	"net/url"
 	"sync"
-	"fmt"
-	 "net/http/cookiejar"
-
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
@@ -44,6 +44,14 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 	req.Header.Add("content-type", contentType)
 	req.Header.Add("x-grpc-web", "1")
 
+	if t.opts.Headers != nil {
+		for headerKey, headers := range t.opts.Headers {
+			for _, headerValue := range headers {
+				req.Header.Add(headerKey, headerValue)
+			}
+		}
+	}
+
 	res, err := t.client.Do(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to send the API")
@@ -59,7 +67,7 @@ func (t *httpTransport) Send(ctx context.Context, endpoint, contentType string, 
 
 	b, _ := ioutil.ReadAll(res.Body)
 	fmt.Printf("body: %s\n", string(b))
-	return nil, fmt.Errorf("invalid status: httpStatus=%s, grpcStatus=%s, headers=%+v", res.Status, grpcStatus, res.Header)
+	return nil, fmt.Errorf("invalid status: httpStatus=%s, grpcStatus=%s, headers=%+v, url=%s", res.Status, grpcStatus, res.Header, url)
 }
 
 func (t *httpTransport) Close() error {
@@ -69,11 +77,21 @@ func (t *httpTransport) Close() error {
 
 func NewUnary(host string, opts *ConnectOptions) UnaryTransport {
 	cookieJar, _ := cookiejar.New(nil)
+
+	client := &http.Client{
+		Jar: cookieJar,
+	}
+
+	if opts.Insecure {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client.Transport = tr
+	}
+
 	return &httpTransport{
 		host:   host,
-		client: &http.Client{
-    			Jar: cookieJar,
-		},
+		client: client,
 		opts:   opts,
 	}
 }
